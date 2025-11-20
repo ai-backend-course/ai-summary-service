@@ -1,146 +1,177 @@
-# AI Summary Service
+# 📝 AI Summary Service
 
-A lightweight Go microservice that generates text summaries using either real OpenAI LLM responses or a local mock summarizer.  
-This service is part of a 4-project AI Backend Portfolio.
+A lightweight, production-ready Go microservice that generates LLM-powered summaries, explanations, and text transformations using either OpenAI or a deterministic mock LLM for local/offline development.
 
----
-
-## Features
-
-- `POST /summary` → returns a summarized version of the input text  
-- Go Fiber server  
-- Simple logging middleware  
-- Mock mode (`USE_LLM_MOCK=true`)  
-- Real OpenAI mode (`USE_LLM_MOCK=false`)  
-- Environment-based configuration  
-- Fly.io deployment ready  
-- No secrets committed (local `.env` only)
+This service is part of a 4-service AI Backend ecosystem that powers a full RAG (Retrieval-Augmented Generation) system.
 
 ---
 
-## Endpoint: POST /summary
+## ✨ Features
 
-### Request Body (JSON)
+- `POST /summary` → Generate a summary or explanation from input text  
+- Real OpenAI support (gpt-4o-mini recommended)  
+- Deterministic mock mode for local development  
+- Clean Fiber HTTP API  
+- Structured logging (Zerolog)  
+- Metrics endpoint for observability  
+- Lightweight, fast, and deployable on Fly.io  
+- Fully containerized (Docker)
 
-```json
-{
-  "text": "Explain the difference between HTTP and HTTPS in 3 sentences."
-}
-```
+---
 
-### Example Response (Real OpenAI)
+## 🧠 Architecture Overview
 
-```json
-{
-  "summary": "HTTP transfers data without encryption, making it vulnerable. HTTPS encrypts traffic using SSL/TLS. This protects sensitive data from interception."
-}
-```
+```mermaid
+flowchart TD
 
-### Example Response (Mock Mode)
+    A[Client / RAG Core] --> B[POST /summary]
 
-```json
-{
-  "summary": "MOCK SUMMARY: Explain the difference between HTTP and HTTPS in 3 sentences."
-}
+    B --> C[Handler]
+    C --> D[AI Layer]
+    D --> E[OpenAI API or Mock LLM]
+
+    E --> C
+    C --> A
 ```
 
 ---
 
-## Environment Variables
+## 📦 Project Structure
 
-### `.env` (local only — not committed)
-
-```env
-OPENAI_API_KEY=your_real_openai_key_here
-USE_LLM_MOCK=false
-PORT=8080
 ```
-
-### `.env.example` (safe to commit)
-
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-USE_LLM_MOCK=false
-PORT=8080
+ai-summary-service/
+├── main.go
+├── go.mod
+├── Dockerfile
+├── .env.example
+└── internal/
+    ├── ai/
+    │   └── llm.go
+    ├── handlers/
+    │   └── summary_handler.go
+    └── middleware/
+        ├── logger.go
+        └── metrics.go
 ```
 
 ---
 
-## Run Locally
+## 🚀 Getting Started
 
-Install dependencies:
+### 1. Clone the repository
 
 ```bash
-go mod tidy
+git clone https://github.com/ai-backend-course/ai-summary-service
+cd ai-summary-service
 ```
 
-Start the server:
+### 2. Create your `.env` file
+
+```bash
+cp .env.example .env
+```
+
+### 3. Run locally
 
 ```bash
 go run .
 ```
 
-Test:
+The service will start at:
 
-```bash
-curl -X POST http://localhost:8080/summary \
-  -H "Content-Type: application/json" \
-  -d '{"text":"Summarize this paragraph."}'
+```
+http://localhost:8080
 ```
 
 ---
 
-## Deploy to Fly.io
+## 🔧 Example Request
 
-Set secrets:
-
-```bash
-flyctl secrets set OPENAI_API_KEY="your_real_key" -a ai-summary-service
-flyctl secrets set USE_LLM_MOCK=false -a ai-summary-service
+### Endpoint  
+```
+POST /summary
 ```
 
-Deploy:
+### Request Body
 
-```bash
-flyctl deploy -a ai-summary-service
+```json
+{
+  "text": "Golang is a fast, typed, compiled language designed for scalable backend systems."
+}
 ```
 
----
+### Example Response (Real LLM)
 
-## Project Structure
+```json
+{
+  "summary": "Go is a fast, compiled language built for scalable backend systems."
+}
+```
 
-```text
-ai-summary-service/
-├── main.go
-├── go.mod
-├── .gitignore
-├── .env.example
-├── internal/
-│   ├── ai/
-│   │   ├── openai.go
-│   │   └── mock.go
-│   ├── handlers/
-│   │   └── summary_handler.go
-│   └── middleware/
-│       └── logger.go
-└── Dockerfile
+### Example Response (Mock LLM)
+
+```json
+{
+  "summary": "MOCK SUMMARY: Golang is a fast, typed..."
+}
 ```
 
 ---
 
-## Portfolio Context
+## ⚙ Environment Variables
 
-This service is part of a 4-project AI Backend Portfolio:
+**.env.example:**
 
-1. Notes-Memory-Core  
-2. Notes-Memory-Core-RAG  
-3. AI Summary Service  
-4. AI Embedding Microservice  
+```env
+OPENAI_API_KEY=your_api_key_here
+USE_LLM_MOCK=true
+OPENAI_MODEL=gpt-4o-mini
+PORT=8080
+ENV=development
+```
 
-Together, these projects demonstrate:
+---
 
-- Go backend development  
-- Microservice architecture  
-- AI integration (LLMs + embeddings)  
-- Secure secret handling practices  
-- Production deployments with Fly.io  
+## 📊 Metrics
+
+```
+GET /metrics
+```
+
+Example:
+
+```json
+{
+  "total_requests": 14,
+  "total_errors": 0,
+  "avg_latency_ms": 1.4
+}
+```
+
+---
+
+## 🐳 Docker
+
+### Build & run
+
+```bash
+docker build -t ai-summary-service .
+docker run -p 8080:8080 ai-summary-service
+```
+
+---
+
+## ☁️ Deploy to Fly.io
+
+```bash
+flyctl launch
+flyctl secrets set OPENAI_API_KEY="your_key"
+flyctl secrets set USE_LLM_MOCK=false
+flyctl deploy
+```
+
+---
+
+## 📜 License
+
+MIT License.

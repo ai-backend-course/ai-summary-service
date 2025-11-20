@@ -1,18 +1,29 @@
-# Environment files
+# -------------------------------------
+#  Environment Files (never commit)
+# -------------------------------------
 .env
 .env.*
-!env.example
+!.env.example
 
-# Output binaries
-/bin
-/dist
-/tmp
+# -------------------------------------
+#  Binary Outputs
+# -------------------------------------
+server
+bin/
+dist/
+tmp/
+*.exe
 
-# OS files
+# -------------------------------------
+#  OS & Editor Junk
+# -------------------------------------
 .DS_Store
-
-# Log files
+Thumbs.db
+.idea/
+.vscode/
 *.log
 
-# Fly files
-.fly/
+# -------------------------------------
+#  Dependency / Build Cache
+# -------------------------------------
+vendor/
