@@ -36,15 +36,15 @@ func Summary(c *fiber.Ctx) error {
 	}
 
 	// Decide mock or real based on env var
-	useMock := os.Getenv("USE_MOCK_LLM")
+	useMock := os.Getenv("USE_LLM_MOCK") == "true"
 
 	var summary string
 	var err error
 
-	if useMock == "false" {
-		summary, err = ai.GenerateOpenAISummary(req.Text)
-	} else {
+	if useMock {
 		summary, err = ai.GenerateMockSummary(req.Text)
+	} else {
+		summary, err = ai.GenerateOpenAISummary(req.Text)
 	}
 
 	if err != nil {
