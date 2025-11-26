@@ -33,7 +33,7 @@ func main() {
 	// Global middleware
 	app.Use(middleware.MetricsMiddleware)
 	app.Use(middleware.Logger)
-	app.Use(middleware.RateLimit)
+	app.Use(middleware.RateLimit())
 
 	// Health route
 	app.Get("/health", func(c *fiber.Ctx) error {
