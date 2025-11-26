@@ -36,7 +36,7 @@ func Summary(c *fiber.Ctx) error {
 	}
 
 	// Decide mock or real based on env var
-	useMock := os.Getenv("USE_LLM_MOCK") == "true"
+	useMock := os.Getenv("USE_LLM_MOCK") == "false"
 
 	var summary string
 	var err error
