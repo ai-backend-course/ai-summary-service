@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -22,6 +23,12 @@ func main() {
 	}
 
 	app := fiber.New()
+
+	// CORS enabled
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "https://ai-backend-course.github.io",
+		AllowMethods: "GET,POST,OPTIONS",
+	}))
 
 	// Global middleware
 	app.Use(middleware.MetricsMiddleware)
