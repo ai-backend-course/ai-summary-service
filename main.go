@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -16,11 +15,6 @@ import (
 func main() {
 	// Pretty logger
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-
-	// Load .env
-	if err := godotenv.Load(); err != nil {
-		log.Warn().Msg("No .env file found, using system env vars")
-	}
 
 	app := fiber.New()
 
